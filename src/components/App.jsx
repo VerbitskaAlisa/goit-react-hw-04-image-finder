@@ -1,6 +1,6 @@
 import Searchbar from "./Searchbar/Searchbar";
 import css from './App.module.css';
-import { ModalWindow } from "./Modal/Modal";
+import ModalWindow from "./Modal/Modal";
 import { Component } from "react";
 import { Audio } from  'react-loader-spinner';
 import ImageGallery from "./ImageGallery/ImageGallery";
@@ -16,7 +16,8 @@ export default class App extends Component {
     page: 1,
     query: '',
     items: [],
-    selectedImage: null,
+    selectedImage: false,
+    showModal: false,
   }
   
   handleFormSubmit = query => {
@@ -56,27 +57,32 @@ export default class App extends Component {
     }));
   }
 
-  selectImage = imgUrl => {
+  selectImage = (imgUrl, tags) => {
     this.setState({
-      selectedImage: imgUrl,
+      selectedImage: {
+        url: imgUrl,
+        tags,
+      },
+      showModal: true,
     })
   };
 
   resetImage = () => {
     this.setState({
       selectedImage: null,
+      showModal: false,
     });
   };
 
   render () {
-    const { items, isLoading, selectedImage } = this.state;
+    const { items, isLoading, selectedImage, showModal } = this.state;
     return (
       <div className={css.App}>
         <Searchbar onSubmit={this.handleFormSubmit}/>
         {items.length > 0 && <ImageGallery images={items} onSelect={this.selectImage}/>}
         {items.length > 11 && !isLoading && (<Button onClick={this.onClick}/>)}
         {isLoading && <Audio color="blue"/>}
-        <ModalWindow selectImage={selectedImage} resetImage={this.resetImage}/>
+        {showModal && <ModalWindow selectImage={selectedImage} resetImage={this.resetImage}/>}
         <ToastContainer />
       </div>
     );

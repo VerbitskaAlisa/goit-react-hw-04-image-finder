@@ -5,7 +5,7 @@ const ImageGalleryItem = ({url, tags, largeImg, onSelect}) => {
     return (
         <>
         <img src={url} alt={tags} className={css.ImageGalleryItemImage} 
-        onClick={() => {onSelect(largeImg)}}/>
+        onClick={() => {onSelect(largeImg, tags)}}/>
         </>
     )
 }

@@ -1,47 +1,83 @@
-import Modal from 'react-modal';
-import PropTypes from 'prop-types';
+// import Modal from 'react-modal';
+// import PropTypes from 'prop-types';
 
-const modalStyles = {
-  overlay: {
-    position: 'fixed',
-    top: '0',
-    left: '0',
-    width: '100vw',
-    height: '100vh',
-    display: 'flex',
-    justifyContent: ' center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    zIndex: '1200',
-  },
-  content: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    maxWidth: 'calc(100vw - 48px)',
-    maxHeight: 'calc(100vh - 24px)',
-    padding: '0',
-    backgroundColor: 'transparent',
-    border: 'none',
-    outline: 'none',
-    overflow: 'hidden',
-  },
-};
-Modal.setAppElement('#root');
+// const modalStyles = {
+//   overlay: {
+//     position: 'fixed',
+//     top: '0',
+//     left: '0',
+//     width: '100vw',
+//     height: '100vh',
+//     display: 'flex',
+//     justifyContent: ' center',
+//     alignItems: 'center',
+//     backgroundColor: 'rgba(0, 0, 0, 0.8)',
+//     zIndex: '1200',
+//   },
+//   content: {
+//     display: 'flex',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     maxWidth: 'calc(100vw - 48px)',
+//     maxHeight: 'calc(100vh - 24px)',
+//     padding: '0',
+//     backgroundColor: 'transparent',
+//     border: 'none',
+//     outline: 'none',
+//     overflow: 'hidden',
+//   },
+// };
+// Modal.setAppElement('#root');
 
-export const ModalWindow = ({ selectImage, resetImage }) => {
-  return (
-    <Modal
-      isOpen={Boolean(selectImage)}
-      onRequestClose={resetImage}
-      style={modalStyles}
-    >
-      <img src={selectImage} alt="Large" />
-    </Modal>
-  );
-};
+// export const ModalWindow = ({ selectImage, resetImage }) => {
+//   return (
+//     <Modal
+//       isOpen={Boolean(selectImage)}
+//       onRequestClose={resetImage}
+//       style={modalStyles}
+//     >
+//       <img src={selectImage} alt="Large" />
+//     </Modal>
+//   );
+// };
 
-Modal.propTypes = {
-  selectImage: PropTypes.string,
-  resetImage: PropTypes.func,
-};
+// Modal.propTypes = {
+//   selectImage: PropTypes.string,
+//   resetImage: PropTypes.func,
+// };
+import { PureComponent } from "react";
+import css from './Modal.module.css';
+
+export default class ModalWindow extends PureComponent {
+    componentDidMount () {
+        window.addEventListener('keydown', this.handleKeydown)
+    }
+
+    componentWillUnmount () {
+        window.removeEventListener('keydown', this.handleKeydown)
+    }
+
+    handleKeydown = e => {
+        if(e.code === 'Escape') {
+            this.props.resetImage();
+        }
+    }
+
+    handleBackdropClick = e => {
+        if(e.currentTarget === e.target) {
+            this.props.resetImage();
+        }
+    }
+
+    render () {
+        const {url, tags} = this.props.selectImage;
+        return (
+            <div className={css.Overlay} onClick={this.handleBackdropClick}>
+        <div className={css.Modal}>
+        <img src={url} alt={tags} />
+        </div>
+        </div>
+
+        )
+    }
+}
