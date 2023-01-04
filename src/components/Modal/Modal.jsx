@@ -1,3 +1,76 @@
+import { useEffect, memo } from "react";
+import css from './Modal.module.css';
+
+
+function ModalWindow ({selectImage, resetImage}) {
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeydown)
+
+        return () => {
+            window.removeEventListener('keydown', handleKeydown)
+        }
+    })
+
+    const handleKeydown = e => {
+        if(e.code === 'Escape') {
+            resetImage();
+        }
+    }
+
+    const handleBackdropClick = e => {
+        if(e.currentTarget === e.target) {
+            resetImage();
+        }
+    }
+    
+    const {url, tags} = selectImage;
+    return <div className={css.Overlay} onClick={handleBackdropClick}>
+    <div className={css.Modal}>
+    <img src={url} alt={tags} />
+    </div>
+    </div>
+}
+
+export default memo(ModalWindow);
+
+//////MODAl on CLass
+
+// export default class ModalWindow extends PureComponent {
+//     componentDidMount () {
+//         window.addEventListener('keydown', this.handleKeydown)
+//     }
+
+//     componentWillUnmount () {
+//         window.removeEventListener('keydown', this.handleKeydown)
+//     }
+
+//     handleKeydown = e => {
+//         if(e.code === 'Escape') {
+//             this.props.resetImage();
+//         }
+//     }
+
+//     handleBackdropClick = e => {
+//         if(e.currentTarget === e.target) {
+//             this.props.resetImage();
+//         }
+//     }
+
+//     render () {
+//         const {url, tags} = this.props.selectImage;
+//         return (
+//             <div className={css.Overlay} onClick={this.handleBackdropClick}>
+//         <div className={css.Modal}>
+//         <img src={url} alt={tags} />
+//         </div>
+//         </div>
+
+//         )
+//     }
+// }
+
+// MOdal from React-Modal but without working close by click on backdrope
+
 // import Modal from 'react-modal';
 // import PropTypes from 'prop-types';
 
@@ -45,39 +118,3 @@
 //   selectImage: PropTypes.string,
 //   resetImage: PropTypes.func,
 // };
-import { PureComponent } from "react";
-import css from './Modal.module.css';
-
-export default class ModalWindow extends PureComponent {
-    componentDidMount () {
-        window.addEventListener('keydown', this.handleKeydown)
-    }
-
-    componentWillUnmount () {
-        window.removeEventListener('keydown', this.handleKeydown)
-    }
-
-    handleKeydown = e => {
-        if(e.code === 'Escape') {
-            this.props.resetImage();
-        }
-    }
-
-    handleBackdropClick = e => {
-        if(e.currentTarget === e.target) {
-            this.props.resetImage();
-        }
-    }
-
-    render () {
-        const {url, tags} = this.props.selectImage;
-        return (
-            <div className={css.Overlay} onClick={this.handleBackdropClick}>
-        <div className={css.Modal}>
-        <img src={url} alt={tags} />
-        </div>
-        </div>
-
-        )
-    }
-}
